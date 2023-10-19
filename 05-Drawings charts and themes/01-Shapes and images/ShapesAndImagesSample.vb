@@ -1,0 +1,236 @@
+﻿' ***********************************************************************************************
+' Required Notice: Copyright (C) EPPlus Software AB. 
+' This software is licensed under PolyForm Noncommercial License 1.0.0 
+' and may only be used for noncommercial purposes 
+' https://polyformproject.org/licenses/noncommercial/1.0.0/
+' 
+' A commercial license to use this software can be purchased at https://epplussoftware.com
+' ************************************************************************************************
+' Date               Author                       Change
+' ************************************************************************************************
+' 01/27/2020         EPPlus Software AB           Initial release EPPlus 5
+' ***********************************************************************************************
+Imports System
+Imports OfficeOpenXml
+Imports System.Drawing
+Imports OfficeOpenXml.Drawing
+
+Namespace EPPlusSamples.DrawingsChartsAndThemes
+    Public Module ShapesAndImagesSample
+        Public Sub Run()
+            Console.WriteLine("Running sample 5.1-Shapes & Images")
+            'The output package
+            Dim outputFile = FileUtil.GetCleanFileInfo("5.1-ShapesAndImages.xlsx")
+
+            'Create the template...
+            Using package As ExcelPackage = New ExcelPackage(outputFile)
+                FillAndColorSamples(package)
+                EffectSamples(package)
+                ThreeDSamples(package)
+                PictureSample(package)
+                package.Save()
+            End Using
+            Console.WriteLine("Sample 5.1 created {0}", FileUtil.OutputDir.Name)
+            Console.WriteLine()
+        End Sub
+        Private Sub PictureSample(ByVal package As ExcelPackage)
+            Dim ws = package.Workbook.Worksheets.Add("Picture")
+
+            'Add an jpg image and apply some effects.
+            Dim pic = ws.Drawings.AddPicture("Landscape", FileUtil.GetFileInfo("05-Drawings charts and themes\01-Shapes and images", "LandscapeView.jpg"))
+            pic.SetPosition(2, 0, 1, 0)
+            pic.Effect.SetPresetShadow(ePresetExcelShadowType.OuterBottomRight)
+            pic.Effect.OuterShadow.Distance = 10
+            pic.Effect.SetPresetSoftEdges(ePresetExcelSoftEdgesType.SoftEdge5Pt)
+
+            'Add the same image, but with 25 percent of the size. Let the position be absolute.
+            pic = ws.Drawings.AddPicture("LandscapeSmall", FileUtil.GetFileInfo("05-Drawings charts and themes\01-Shapes and images", "LandscapeView.jpg"))
+            pic.SetPosition(2, 0, 16, 0)
+            pic.SetSize(25) '25% 
+            pic.ChangeCellAnchor(eEditAs.Absolute)
+
+            'Add the same image again, but let the picture move and resize when rows and colums are resized.
+            pic = ws.Drawings.AddPicture("LandscapeMoveAndResize", FileUtil.GetFileInfo("05-Drawings charts and themes\01-Shapes and images", "LandscapeView.jpg"))
+            pic.SetPosition(30, 0, 16, 0)
+            pic.ChangeCellAnchor(eEditAs.TwoCell)
+
+            'Add the image overlapping the first image, but make sure it is behind
+            pic = ws.Drawings.AddPicture("LandscapeSendToBack", FileUtil.GetFileInfo("05-Drawings charts and themes\01-Shapes and images", "LandscapeView.jpg"))
+            pic.SetPosition(8, 0, 8, 0)
+            pic.SetSize(25) '25% 
+            pic.SendToBack()
+        End Sub
+
+        Private Sub FillAndColorSamples(ByVal package As ExcelPackage)
+            Dim ws = package.Workbook.Worksheets.Add("Fills And Colors")
+
+            'Drawing with a Solid fill
+            Dim drawing = ws.Drawings.AddShape("SolidFill", eShapeStyle.RoundRect)
+            drawing.SetPosition(0, 5, 0, 5)
+            drawing.SetSize(250, 250)
+            drawing.Fill.Style = eFillStyle.SolidFill
+            drawing.Fill.SolidFill.Color.SetSchemeColor(eSchemeColor.Accent6)
+            drawing.Text = "RoundRect With Solid Fill"
+
+            'Drawing with a pattern fill
+            drawing = ws.Drawings.AddShape("PatternFill", eShapeStyle.SmileyFace)
+            drawing.SetPosition(0, 5, 4, 5)
+            drawing.SetSize(250, 250)
+            drawing.Fill.Style = eFillStyle.PatternFill
+            drawing.Fill.PatternFill.PatternType = eFillPatternStyle.DiagBrick
+            drawing.Fill.PatternFill.BackgroundColor.SetPresetColor(ePresetColor.Yellow)
+            drawing.Fill.PatternFill.ForegroundColor.SetSystemColor(eSystemColor.GrayText)
+            drawing.Border.Width = 2
+            drawing.Border.Fill.Style = eFillStyle.SolidFill
+            drawing.Border.Fill.SolidFill.Color.SetHslColor(90, 50, 25)
+            drawing.Font.Fill.Color = Color.Black
+            drawing.Font.Bold = True
+            drawing.Text = "Smiley With Pattern Fill"
+
+            'Drawing with a Gradient fill
+            drawing = ws.Drawings.AddShape("GradientFill", eShapeStyle.Heart)
+            drawing.SetPosition(0, 5, 8, 5)
+            drawing.SetSize(250, 250)
+            drawing.Fill.Style = eFillStyle.GradientFill
+            drawing.Fill.GradientFill.Colors.AddRgb(0, Color.DarkRed)
+            drawing.Fill.GradientFill.Colors.AddRgb(30, Color.Red)
+            drawing.Fill.GradientFill.Colors.AddRgbPercentage(65, 100, 0, 0)
+            drawing.Fill.GradientFill.Colors(2).Color.Transforms.AddAlpha(75)
+            drawing.Text = "Heart with Gradient"
+
+            'Drawing with a blip fill
+            drawing = ws.Drawings.AddShape("BlipFill", eShapeStyle.Bevel)
+            drawing.SetPosition(0, 5, 12, 5)
+            drawing.SetSize(250, 250)
+            drawing.Fill.Style = eFillStyle.BlipFill
+
+            drawing.Fill.BlipFill.Image.SetImage(FileUtil.GetFileInfo("05-Drawings charts and themes\01-Shapes and images", "EPPlusLogo.jpg"))
+            drawing.Fill.BlipFill.Stretch = True
+            drawing.Text = "Blip Fill"
+        End Sub
+        Private Sub EffectSamples(ByVal package As ExcelPackage)
+            Dim ws = package.Workbook.Worksheets.Add("Effects")
+
+            ' ** Shadow effects ***
+            Dim drawing = ws.Drawings.AddShape("OuterShadow", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetShadow(ePresetExcelShadowType.OuterBottomRight)
+            drawing.SetPosition(0, 5, 0, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Outer Shadow - Bottom Right"
+
+            drawing = ws.Drawings.AddShape("InnerShadow", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetShadow(ePresetExcelShadowType.InnerTopLeft)
+            drawing.SetPosition(0, 5, 4, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Inner Shadow - Top Left"
+
+            drawing = ws.Drawings.AddShape("PerspectiveBelowShadow", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetShadow(ePresetExcelShadowType.PerspectiveBelow)
+            drawing.SetPosition(0, 5, 8, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Perspective Shadow - Below"
+
+            ' ** Glow effects ***
+            drawing = ws.Drawings.AddShape("Glow Accent1 5pt", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetGlow(ePresetExcelGlowType.Accent1_5Pt)
+            drawing.SetPosition(20, 5, 0, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Glow - Accent1 - 5pt"
+
+            drawing = ws.Drawings.AddShape("Glow Accent2 8pt", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetGlow(ePresetExcelGlowType.Accent2_8Pt)
+            drawing.SetPosition(20, 5, 4, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Glow - Accent2 - 8pt"
+
+            drawing = ws.Drawings.AddShape("Glow Accent4 11pt", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetGlow(ePresetExcelGlowType.Accent4_11Pt)
+            drawing.SetPosition(20, 5, 8, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Glow - Accent4 - 11pt"
+
+            drawing = ws.Drawings.AddShape("Glow Accent5 18pt", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetGlow(ePresetExcelGlowType.Accent5_18Pt)
+            drawing.SetPosition(20, 5, 12, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Glow - Accent5 - 18pt"
+
+            ' ** Reflection effects ***
+            drawing = ws.Drawings.AddShape("Full Reflection", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetReflection(ePresetExcelReflectionType.Full4Pt)
+            drawing.SetPosition(40, 5, 0, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Reflection - Full 4Pt"
+
+            drawing = ws.Drawings.AddShape("Half Reflection", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetReflection(ePresetExcelReflectionType.Half8Pt)
+            drawing.SetPosition(40, 5, 4, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Reflection - Half 8Pt"
+
+            drawing = ws.Drawings.AddShape("Tight Touching Reflection", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetReflection(ePresetExcelReflectionType.TightTouching)
+            drawing.SetPosition(40, 5, 8, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Reflection - Tight Touching Reflection"
+
+            drawing = ws.Drawings.AddShape("Soft Edges 10Pt", eShapeStyle.RoundRect)
+            drawing.Effect.SetPresetSoftEdges(ePresetExcelSoftEdgesType.SoftEdge10Pt)
+            drawing.SetPosition(70, 0, 0, 0)
+            drawing.SetSize(250, 250)
+            drawing.Text = "Soft Edges - 10Pt"
+        End Sub
+        Private Sub ThreeDSamples(ByVal package As ExcelPackage)
+            Dim ws = package.Workbook.Worksheets.Add("3D")
+
+            'Create a shape with 3D - TopBevel - Round
+            Dim drawing = ws.Drawings.AddShape("3D - TopBevel - Round", eShapeStyle.RoundRect)
+            drawing.ThreeD.TopBevel.BevelType = eBevelPresetType.Circle
+            'Default height and width is 6, but we can alter it.
+            drawing.ThreeD.TopBevel.Height = 5
+            drawing.ThreeD.TopBevel.Width = 5
+            drawing.SetPosition(0, 5, 0, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "3D - TopBevel - Angle"
+
+            'Create a shape with 3D - TopBevel - ArtDeco and change the 3D camera
+            drawing = ws.Drawings.AddShape("3D - TopBevel - ArtDeco", eShapeStyle.RoundRect)
+            drawing.ThreeD.TopBevel.BevelType = eBevelPresetType.ArtDeco
+            drawing.ThreeD.Scene.Camera.CameraType = ePresetCameraType.PerspectiveLeft
+            drawing.ThreeD.MaterialType = ePresetMaterialType.TranslucentPowder
+            drawing.SetPosition(0, 5, 5, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "3D - TopBevel - ArtDeco"
+
+            'Create a shape with 3D Camera PerspectiveRelaxedModerately, alter the beveltype and Lightrig 
+            drawing = ws.Drawings.AddShape("3D Camera PerspectiveRelaxedModerately", eShapeStyle.RoundRect)
+            drawing.ThreeD.MaterialType = ePresetMaterialType.Metal
+            drawing.ThreeD.Scene.Camera.CameraType = ePresetCameraType.PerspectiveRelaxedModerately
+            drawing.ThreeD.TopBevel.BevelType = eBevelPresetType.HardEdge
+            drawing.ThreeD.Scene.LightRig.RigType = eRigPresetType.Sunrise
+            drawing.SetPosition(0, 5, 10, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "3D - Camera - PerspectiveRelaxedModerately - Metal"
+
+            'Create a shape with 3D Camera With Extrusion Color & Contour Color
+            drawing = ws.Drawings.AddShape("3D Camera With Extr & Contour", eShapeStyle.RoundRect)
+            drawing.ThreeD.MaterialType = ePresetMaterialType.Plastic
+            drawing.ThreeD.Scene.Camera.CameraType = ePresetCameraType.IsometricOffAxis2Right
+            drawing.ThreeD.TopBevel.BevelType = eBevelPresetType.Convex
+            drawing.ThreeD.TopBevel.BevelType = eBevelPresetType.Circle
+            drawing.ThreeD.Scene.LightRig.RigType = eRigPresetType.BrightRoom
+
+            drawing.ThreeD.ExtrusionColor.SetRgbColor(Color.Red)
+            drawing.ThreeD.ExtrusionHeight = 6
+
+            drawing.ThreeD.ContourColor.SetHslColor(240, 32, 27) 'Dark blue
+            drawing.ThreeD.ContourWidth = 3
+
+            drawing.ThreeD.Scene.LightRig.RigType = eRigPresetType.BrightRoom
+
+            drawing.SetPosition(0, 5, 15, 5)
+            drawing.SetSize(250, 250)
+            drawing.Text = "3D Camera With Extrusion & Contour"
+        End Sub
+    End Module
+End Namespace
