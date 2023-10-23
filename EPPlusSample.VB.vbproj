@@ -22,9 +22,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\EPPlus7\EPPlus\src\EPPlus\EPPlus.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <None Update=".gitignore">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

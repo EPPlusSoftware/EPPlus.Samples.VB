@@ -21,7 +21,7 @@ Namespace EPPlusSamples.WorkbookWorksheetAndRanges
         ''' </summary>
         ''' <paramname="outputDir">The path where sample7.xlsx is</param>
         Public Sub Run()
-            Console.WriteLine("Running sample 10-Linq")
+            Console.WriteLine("Running sample 1.8-Linq")
             Console.WriteLine("Now open sample 1.7 again and perform some Linq queries...")
             Console.WriteLine()
 
