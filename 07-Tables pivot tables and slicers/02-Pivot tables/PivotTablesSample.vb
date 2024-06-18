@@ -13,6 +13,7 @@
 Imports System
 Imports System.Collections.Generic
 Imports System.Linq
+Imports System.IO
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Table.PivotTable
 Imports OfficeOpenXml.Drawing.Chart
@@ -22,7 +23,7 @@ Imports EPPlusSamples.FiltersAndValidations
 
 Namespace EPPlusSamples.PivotTables
     ''' <summary>
-    ''' This class shows how to use pivottables 
+    ''' This class shows how to use pivot tables 
     ''' </summary>
     Public Module PivotTablesSample
         Public Class SalesDTO
@@ -42,7 +43,7 @@ Namespace EPPlusSamples.PivotTables
 
             Dim list = GetDataFromSQL()
 
-            Dim newFile = FileUtil.GetCleanFileInfo("7.2-PivotTables.xlsx")
+            Dim newFile As FileInfo = EPPlusSamples.FileUtil.GetCleanFileInfo("7.2-PivotTables.xlsx")
             Using pck As ExcelPackage = New ExcelPackage(newFile)
                 ' get the handle to the existing worksheet
                 Dim wsData = pck.Workbook.Worksheets.Add("SalesData")
@@ -62,6 +63,8 @@ Namespace EPPlusSamples.PivotTables
                 Dim pt6 = CreatePivotTableCaptionFilter(pck, dataRange)
                 Dim pt7 = CreatePivotTableWithDataFieldsUsingShowAs(pck, dataRange)
 
+
+                pt1.Calculate()
                 CreatePivotTableSorting(pck, dataRange)
 
                 pck.Save()
@@ -70,7 +73,7 @@ Namespace EPPlusSamples.PivotTables
         End Function
 
 
-        Private Function CreatePivotTableWithPivotChart(ByVal pck As ExcelPackage, ByVal dataRange As ExcelRangeBase) As ExcelPivotTable
+        Private Function CreatePivotTableWithPivotChart(pck As ExcelPackage, dataRange As ExcelRangeBase) As ExcelPivotTable
             Dim wsPivot = pck.Workbook.Worksheets.Add("PivotSimple")
             Dim pivotTable = wsPivot.PivotTables.Add(wsPivot.Cells("A1"), dataRange, "PerCountry")
 
@@ -89,7 +92,7 @@ Namespace EPPlusSamples.PivotTables
             Return pivotTable
         End Function
 
-        Private Function CreatePivotTableWithDataGrouping(ByVal pck As ExcelPackage, ByVal dataRange As ExcelRangeBase) As ExcelPivotTable
+        Private Function CreatePivotTableWithDataGrouping(pck As ExcelPackage, dataRange As ExcelRangeBase) As ExcelPivotTable
             Dim wsPivot2 = pck.Workbook.Worksheets.Add("PivotDateGrp")
             Dim pivotTable2 = wsPivot2.PivotTables.Add(wsPivot2.Cells("A3"), dataRange, "PerEmploeeAndQuarter")
 
@@ -126,7 +129,7 @@ Namespace EPPlusSamples.PivotTables
             pivotTable2.DataOnRows = False
             Return pivotTable2
         End Function
-        Private Function CreatePivotTableWithPageFilter(ByVal pck As ExcelPackage, ByVal pivotCache As ExcelPivotCacheDefinition) As ExcelPivotTable
+        Private Function CreatePivotTableWithPageFilter(pck As ExcelPackage, pivotCache As ExcelPivotCacheDefinition) As ExcelPivotTable
             Dim wsPivot3 = pck.Workbook.Worksheets.Add("PivotWithPageField")
 
             'Create a new pivot table using the same cache as pivot table 2.
@@ -159,7 +162,7 @@ Namespace EPPlusSamples.PivotTables
             pivotTable3.DataOnRows = False
             Return pivotTable3
         End Function
-        Private Function CreatePivotTableWithASlicer(ByVal pck As ExcelPackage, ByVal pivotCache As ExcelPivotCacheDefinition) As ExcelPivotTable
+        Private Function CreatePivotTableWithASlicer(pck As ExcelPackage, pivotCache As ExcelPivotCacheDefinition) As ExcelPivotTable
             'This method connects a slicer to the pivot table. Also see sample 24 for more detailed samples on slicers.
             Dim wsPivot4 = pck.Workbook.Worksheets.Add("PivotWithSlicer")
 
@@ -194,7 +197,7 @@ Namespace EPPlusSamples.PivotTables
             pivotTable4.DataOnRows = False
             Return pivotTable4
         End Function
-        Private Function CreatePivotTableWithACalculatedField(ByVal pck As ExcelPackage, ByVal pivotCache As ExcelPivotCacheDefinition) As ExcelPivotTable
+        Private Function CreatePivotTableWithACalculatedField(pck As ExcelPackage, pivotCache As ExcelPivotCacheDefinition) As ExcelPivotTable
             'This method connects a slicer to the pivot table. Also see sample 24 for more detailed samples on slicers.
             Dim wsPivot4 = pck.Workbook.Worksheets.Add("PivotWithCalculatedField")
 
@@ -224,7 +227,7 @@ Namespace EPPlusSamples.PivotTables
             pivotTable4.DataOnRows = False
             Return pivotTable4
         End Function
-        Private Function CreatePivotTableCaptionFilter(ByVal pck As ExcelPackage, ByVal dataRange As ExcelRangeBase) As ExcelPivotTable
+        Private Function CreatePivotTableCaptionFilter(pck As ExcelPackage, dataRange As ExcelRangeBase) As ExcelPivotTable
             Dim wsPivot4 = pck.Workbook.Worksheets.Add("PivotWithCaptionFilter")
 
             'Create a new pivot table with a new cache.
@@ -260,7 +263,7 @@ Namespace EPPlusSamples.PivotTables
             pivotTable4.DataOnRows = False
             Return pivotTable4
         End Function
-        Private Function CreatePivotTableWithDataFieldsUsingShowAs(ByVal pck As ExcelPackage, ByVal dataRange As ExcelRangeBase) As ExcelPivotTable
+        Private Function CreatePivotTableWithDataFieldsUsingShowAs(pck As ExcelPackage, dataRange As ExcelRangeBase) As ExcelPivotTable
             Dim wsPivot5 = pck.Workbook.Worksheets.Add("PivotWithShowAsFields")
 
             'Create a new pivot table with a new cache.
@@ -308,7 +311,7 @@ Namespace EPPlusSamples.PivotTables
 
             Return pivotTable5
         End Function
-        Private Sub CreatePivotTableSorting(ByVal pck As ExcelPackage, ByVal dataRange As ExcelRangeBase)
+        Private Sub CreatePivotTableSorting(pck As ExcelPackage, dataRange As ExcelRangeBase)
             Dim wsPivot = pck.Workbook.Worksheets.Add("PivotSorting")
 
             'Sort by the row field
@@ -350,9 +353,9 @@ Namespace EPPlusSamples.PivotTables
 
         Private Function GetDataFromSQL() As List(Of SalesDTO)
             Dim ret = New List(Of SalesDTO)()
-            Using sqlConn = New SQLiteConnection(ConnectionString)
+            Using sqlConn = New SQLiteConnection(EPPlusSamples.SampleSettings.ConnectionString)
                 sqlConn.Open()
-                Using sqlCmd = New SQLiteCommand(OrdersWithTaxAndFreightSql, sqlConn)
+                Using sqlCmd = New SQLiteCommand(EPPlusSamples.FiltersAndValidations.SqlStatements.OrdersWithTaxAndFreightSql, sqlConn)
                     Using sqlReader = sqlCmd.ExecuteReader()
                         'Get the data and fill rows 5 onwards
                         While sqlReader.Read()

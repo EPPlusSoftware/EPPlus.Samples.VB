@@ -22,6 +22,8 @@ Namespace EPPlusSamples
             Call PivotTablesSample.Run()
             'The second class demonstrates how to style you pivot table.
             Call PivotTablesStylingSample.Run()
+            'This sample demonstrates how to calculate and fetch calculated data from a pivot table.
+            Call PivotTablesCalculationSample.Run()
 
             'Sample 7.4 - Custom Named Table, Pivot Table and Slicer styles
             Call CustomTableSlicerStyleSample.Run()

@@ -80,6 +80,9 @@ Namespace EPPlusSamples.DrawingsChartsAndThemes
                 'Add an area chart using a chart template (chrx file)
                 Await ChartTemplateSample.AddAreaChart(package)
 
+                'Add a stackedColumn chart with custom labels
+                BarColumnChartsWithManualLayout.Add(package)
+
                 'Save our new workbook in the output directory and we are done!
                 package.SaveAs(xlFile)
                 Return xlFile.FullName

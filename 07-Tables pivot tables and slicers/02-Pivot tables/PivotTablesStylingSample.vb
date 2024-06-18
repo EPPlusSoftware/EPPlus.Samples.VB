@@ -11,6 +11,7 @@
 ' 01/27/2020         EPPlus Software AB           Initial release EPPlus 5
 ' ***********************************************************************************************
 Imports System
+Imports System.IO
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Table.PivotTable
 Imports OfficeOpenXml.Drawing
@@ -20,13 +21,13 @@ Imports OfficeOpenXml.Table
 
 Namespace EPPlusSamples.PivotTables
     ''' <summary>
-    ''' This class shows how to use pivottables 
+    ''' This class shows how to style pivot tables 
     ''' </summary>
     Public Module PivotTablesStylingSample
         Public Sub Run()
             Console.WriteLine("Running sample 7.3-Pivot Table Styling")
-            Dim templateFile = FileUtil.GetFileInfo("7.2-PivotTables.xlsx")
-            Dim newFile = FileUtil.GetFileInfo("7.2-PivotTables-Styling.xlsx")
+            Dim templateFile As FileInfo = EPPlusSamples.FileUtil.GetFileInfo("7.2-PivotTables.xlsx")
+            Dim newFile As FileInfo = EPPlusSamples.FileUtil.GetFileInfo("7.2-PivotTables-Styling.xlsx")
             Using pck As ExcelPackage = New ExcelPackage(newFile, templateFile)
                 'These two sample shows how to style different parts on the pivot table using pivot areas.
                 StylePivotTable1_PerCountry(pck)
@@ -52,7 +53,7 @@ Namespace EPPlusSamples.PivotTables
             Console.WriteLine()
         End Sub
 
-        Private Sub StylePivotTable8_Sort(ByVal pck As ExcelPackage)
+        Private Sub StylePivotTable8_Sort(pck As ExcelPackage)
             Dim wsPivot = pck.Workbook.Worksheets("PivotSorting")
 
             'Mark the sorted ranges
@@ -77,7 +78,7 @@ Namespace EPPlusSamples.PivotTables
 
         End Sub
 
-        Private Sub StylePivotTable1_PerCountry(ByVal pck As ExcelPackage)
+        Private Sub StylePivotTable1_PerCountry(pck As ExcelPackage)
             Dim pivot1 = pck.Workbook.Worksheets("PivotSimple").PivotTables(0)
             'First add a style that sets the font and color for the entire pivot table.
             Dim styleWholeTable = pivot1.Styles.AddWholeTable()
@@ -104,7 +105,7 @@ Namespace EPPlusSamples.PivotTables
             styleDataForGrandTotal.Style.Font.Color.SetColor(eThemeSchemeColor.Accent6)
             styleDataForGrandTotal.GrandRow = True
         End Sub
-        Private Sub StylePivotTable2_WithDataGrouping(ByVal pck As ExcelPackage)
+        Private Sub StylePivotTable2_WithDataGrouping(pck As ExcelPackage)
             Dim pivot2 = pck.Workbook.Worksheets("PivotDateGrp").PivotTables(0)
 
             'Add a gradient fill for the page field label.
@@ -161,7 +162,7 @@ Namespace EPPlusSamples.PivotTables
             dataItem1.Conditions.DataFields.Add(pivot2.DataFields(2))  'Freight
             dataItem1.Style.Font.Color.SetColor(Color.DarkMagenta)
         End Sub
-        Private Sub StylePivotTable3_WithPageFilter(ByVal pck As ExcelPackage)
+        Private Sub StylePivotTable3_WithPageFilter(pck As ExcelPackage)
             Dim pivot3 = pck.Workbook.Worksheets("PivotWithPageField").PivotTables(0)
 
             'Create a named pivot table style with Dark28 to start from and make some minor changes.
@@ -198,7 +199,7 @@ Namespace EPPlusSamples.PivotTables
             style4.CollapsedLevelsAreSubtotals = True 'Only for the total only. Setting this to false will set the format for the sub items as well
         End Sub
 
-        Private Sub StylePivotTable4_WithASlicer(ByVal pck As ExcelPackage)
+        Private Sub StylePivotTable4_WithASlicer(pck As ExcelPackage)
             'This method connects a slicer to the pivot table. Also see sample 24 for more detailed samples on slicers.
             Dim wsPivot4 = pck.Workbook.Worksheets("PivotWithSlicer")
             Dim pivotTable4 = wsPivot4.PivotTables(0)
@@ -216,7 +217,7 @@ Namespace EPPlusSamples.PivotTables
             style1.DataOnly = False    'DataOnly is true by default, so to apply the style to the entire row we set it to false.
             style1.Style.Font.Size = 18
         End Sub
-        Private Sub StylePivotTable5_WithACalculatedField(ByVal pck As ExcelPackage)
+        Private Sub StylePivotTable5_WithACalculatedField(pck As ExcelPackage)
             'This method connects a slicer to the pivot table. Also see sample 24 for more detailed samples on slicers.
             Dim wsPivot5 = pck.Workbook.Worksheets("PivotWithCalculatedField")
             'Create a new pivot table using the same cache as pivot table 2.
@@ -239,7 +240,7 @@ Namespace EPPlusSamples.PivotTables
             style3.LabelOnly = False
             style3.Style.Fill.BackgroundColor.SetColor(eThemeSchemeColor.Accent4)
         End Sub
-        Private Sub StylePivotTable6_CaptionFilter(ByVal pck As ExcelPackage)
+        Private Sub StylePivotTable6_CaptionFilter(pck As ExcelPackage)
             Dim wsPivot6 = pck.Workbook.Worksheets("PivotWithCaptionFilter")
             Dim pivotTable6 = wsPivot6.PivotTables(0)
 
@@ -253,7 +254,7 @@ Namespace EPPlusSamples.PivotTables
             Dim style2 = pivotTable6.Styles.AddButtonField(ePivotTableAxis.RowAxis, 1) 'Field with index 1 in the row axis.
             style2.Style.Font.Color.SetColor(eThemeSchemeColor.Accent4)
         End Sub
-        Private Sub StylePivotTable7_WithDataFieldsUsingShowAs(ByVal pck As ExcelPackage)
+        Private Sub StylePivotTable7_WithDataFieldsUsingShowAs(pck As ExcelPackage)
             Dim wsPivot7 = pck.Workbook.Worksheets("PivotWithShowAsFields")
             Dim pivotTable7 = wsPivot7.PivotTables(0)
 

@@ -10,33 +10,36 @@ Namespace EPPlusSamples
         'More advanced samples using charts and json exports are available in our samples web site available 
         'here: https://samples.epplussoftware.com/HtmlExport, https://samples.epplussoftware.com/JsonExport
         Public Async Function RunAsync() As Task
-            Dim outputFolder = FileUtil.GetDirectoryInfo("HtmlOutput")
+            Dim outputFolder = EPPlusSamples.FileUtil.GetDirectoryInfo("HtmlOutput")
 
-            Await ExportGettingStartedAsync(outputFolder)
+            Await HtmlRangeExportSample.ExportGettingStartedAsync(outputFolder)
 
-            ExportSalesReport(outputFolder)
+            HtmlRangeExportSample.ExportSalesReport(outputFolder)
 
-            Await ExcludeCssAsync(outputFolder)
+            Await HtmlRangeExportSample.ExcludeCssAsync(outputFolder)
 
-            ExportMultipleRanges(outputFolder)
+            HtmlRangeExportSample.ExportMultipleRanges(outputFolder)
+
+            HtmlRangeExportSample.ExportRangeWithConditionalFormatting(outputFolder)
+            HtmlRangeExportSample.ExportRangeWithAdvancedConditionalFormatting(outputFolder)
         End Function
 
-        Private Async Function ExportGettingStartedAsync(ByVal outputFolder As DirectoryInfo) As Task
+        Private Async Function ExportGettingStartedAsync(outputFolder As DirectoryInfo) As Task
             'Start by using the excel file generated in sample 8
-            Using p = New ExcelPackage(FileUtil.GetFileInfo("1.01-GettingStarted.xlsx"))
+            Using p = New ExcelPackage(EPPlusSamples.FileUtil.GetFileInfo("1.01-GettingStarted.xlsx"))
                 Dim ws = p.Workbook.Worksheets("Inventory")
                 'Will create the html exporter for min and max bounds of the worksheet (ws.Dimensions)
                 Dim exporter = ws.Cells.CreateHtmlExporter()
 
                 'Get the html and styles in one call. 
                 Dim html = Await exporter.GetSinglePageAsync()
-                Await File.WriteAllTextAsync(FileUtil.GetFileInfo(outputFolder, "2.5-Range-GettingStarted.html", True).FullName, html)
+                Await File.WriteAllTextAsync(EPPlusSamples.FileUtil.GetFileInfo(CType(outputFolder, DirectoryInfo), CStr("2.5-Range-GettingStarted.html"), CBool(True)).FullName, html)
             End Using
         End Function
 
-        Private Sub ExportSalesReport(ByVal outputFolder As DirectoryInfo)
+        Private Sub ExportSalesReport(outputFolder As DirectoryInfo)
             'Start by using the excel file generated in sample 8
-            Using p = New ExcelPackage(FileUtil.GetFileInfo("1.06-Salesreport.xlsx"))
+            Using p = New ExcelPackage(EPPlusSamples.FileUtil.GetFileInfo("1.06-Salesreport.xlsx"))
                 Dim ws = p.Workbook.Worksheets("Sales")
                 Dim exporter = ws.Cells.CreateHtmlExporter()   'Will create the html exporter for min and max bounds of the worksheet (ws.Dimensions)
                 exporter.Settings.HeaderRows = 4               'We have three header rows.
@@ -64,12 +67,12 @@ Namespace EPPlusSamples
 
                 Dim html = $"<html><head><style type=""text/css"">{cssTable}</style></head>{htmlTable}</html>"
 
-                File.WriteAllText(FileUtil.GetFileInfo(outputFolder, "2.5-Range-Salesreport.html", True).FullName, html)
+                File.WriteAllText(EPPlusSamples.FileUtil.GetFileInfo(CType(outputFolder, DirectoryInfo), CStr("2.5-Range-Salesreport.html"), CBool(True)).FullName, html)
             End Using
         End Sub
-        Private Async Function ExcludeCssAsync(ByVal outputFolder As DirectoryInfo) As Task
+        Private Async Function ExcludeCssAsync(outputFolder As DirectoryInfo) As Task
             'Start by using the excel file generated in sample 20
-            Using p = New ExcelPackage(FileUtil.GetFileInfo("Workbooks", "2.5-CreateAFileSystemReport.xlsx"))
+            Using p = New ExcelPackage(EPPlusSamples.FileUtil.GetFileInfo("Workbooks", "2.5-CreateAFileSystemReport.xlsx"))
                 Dim ws = p.Workbook.Worksheets(0)
                 Dim range = ws.Cells(1, 1, 5, ws.Dimension.End.Column)
 
@@ -78,12 +81,12 @@ Namespace EPPlusSamples
                 exporter.Settings.Css.CssExclude.Font = eFontExclude.Bold Or eFontExclude.Italic Or eFontExclude.Underline
 
                 Dim html = Await exporter.GetSinglePageAsync()
-                Await File.WriteAllTextAsync(FileUtil.GetFileInfo(outputFolder, "2.5-Range-ExcludeCss.html", True).FullName, html)
+                Await File.WriteAllTextAsync(EPPlusSamples.FileUtil.GetFileInfo(CType(outputFolder, DirectoryInfo), CStr("2.5-Range-ExcludeCss.html"), CBool(True)).FullName, html)
             End Using
         End Function
-        Private Sub ExportMultipleRanges(ByVal outputFolder As DirectoryInfo)
+        Private Sub ExportMultipleRanges(outputFolder As DirectoryInfo)
             'Start by using the excel file generated in sample 15
-            Using p = New ExcelPackage(FileUtil.GetFileInfo("Workbooks", "2.5-ChartsAndThemes.xlsx"))
+            Using p = New ExcelPackage(EPPlusSamples.FileUtil.GetFileInfo("Workbooks", "2.5-ChartsAndThemes.xlsx"))
                 'Now we will use the sample 15 and read two ranges from two different worksheets and combine them to use the same CSS.
                 'To do so we create an HTML exporter on the workbook level and adds the ranges we want to use.
                 Dim ws3D = p.Workbook.Worksheets("3D Charts")
@@ -110,7 +113,78 @@ Namespace EPPlusSamples
 
                 'We also exports a table and merge the css the range css.
                 Dim htmlTemplate = "<html>" & vbCrLf & "<head>" & vbCrLf & "<style type=""text/css"">" & vbCrLf & "{0}</style></head>" & vbCrLf & "<body>" & vbCrLf & "{1}<hr>{2}<hr>{3}</body>" & vbCrLf & "</html>"
-                File.WriteAllText(FileUtil.GetFileInfo(outputFolder, "2.5-Range-MultipleRanges.html", True).FullName, String.Format(htmlTemplate, css, html3D, htmlStock, tblHtml))
+                File.WriteAllText(EPPlusSamples.FileUtil.GetFileInfo(CType(outputFolder, DirectoryInfo), CStr("2.5-Range-MultipleRanges.html"), CBool(True)).FullName, String.Format(htmlTemplate, css, html3D, htmlStock, tblHtml))
+            End Using
+        End Sub
+
+        Private Sub ExportRangeWithConditionalFormatting(outputFolder As DirectoryInfo)
+            'Start by using the excel file generated in sample 3.2
+            Using p = New ExcelPackage(EPPlusSamples.FileUtil.GetFileInfo("Workbooks", "3.2-ConditionalFormattings.xlsx"))
+                Dim averagesSheet = p.Workbook.Worksheets("AverageExamples")
+
+                'We must call calculate to ensure conditional formattings can calculate what cells should be formatted and how.
+                averagesSheet.Calculate()
+
+                'Create the exporter for the relevant range
+                Dim exporter = averagesSheet.Cells("A1:B21").CreateHtmlExporter()
+
+                'Set settings for the exporter
+                Dim settings = exporter.Settings
+                settings.Pictures.Include = ePictureInclude.Include
+                settings.Minify = False
+                settings.SetColumnWidth = True
+                settings.SetRowHeight = True
+                settings.Pictures.AddNameAsId = True
+
+                'Export both css and html in one go
+                Dim html = exporter.GetSinglePage()
+
+                'Write the results to file
+                File.WriteAllText(EPPlusSamples.FileUtil.GetFileInfo(CType(outputFolder, DirectoryInfo), CStr("3.2-ConditionalFormattingsAverages.html"), CBool(True)).FullName, html)
+            End Using
+        End Sub
+
+        Private Sub ExportRangeWithAdvancedConditionalFormatting(outputFolder As DirectoryInfo)
+            'Start by using the excel file generated in sample 3.2
+            Using p = New ExcelPackage(EPPlusSamples.FileUtil.GetFileInfo("Workbooks", "3.2-ConditionalFormattings.xlsx"))
+                'Get a sheet with databars
+                Dim dataSheet = p.Workbook.Worksheets("Databars")
+
+                'We must call calculate to ensure conditional formattings can calculate what cells should be formatted and how.
+                dataSheet.Calculate()
+
+                'Create the exporter for the relevant range
+                Dim exporter = dataSheet.Cells("A1:H21").CreateHtmlExporter()
+
+                'Set settings for the exporter
+                Dim settings = exporter.Settings
+                settings.Minify = False
+                settings.SetColumnWidth = True
+                settings.SetRowHeight = True
+
+                'Export both css and html in one go
+                Dim html = exporter.GetSinglePage()
+
+                'Write the results to file
+                File.WriteAllText(EPPlusSamples.FileUtil.GetFileInfo(CType(outputFolder, DirectoryInfo), CStr("3.2-ConditionalFormattingsDatabars.html"), CBool(True)).FullName, html)
+
+                'Get sheet with iconsets
+                Dim iconsetSheet = p.Workbook.Worksheets("Iconsets")
+
+                'Please Note: Since this sheet includes a Rand() formula the icons in the D column will change each time the samples are executing.
+                'Therefore it may not match the icons in the worksheet exactly. The icons in G column will always be the same.
+                iconsetSheet.Calculate()
+
+                Dim iconExporter = iconsetSheet.Cells("A1:G14").CreateHtmlExporter()
+
+                Dim iconExporterSettings = iconExporter.Settings
+                iconExporterSettings.Minify = False
+                iconExporterSettings.SetColumnWidth = True
+                iconExporterSettings.SetRowHeight = True
+
+                Dim iconHtml = iconExporter.GetSinglePage()
+
+                File.WriteAllText(EPPlusSamples.FileUtil.GetFileInfo(CType(outputFolder, DirectoryInfo), CStr("3.2-ConditionalFormattingsIconSets.html"), CBool(True)).FullName, iconHtml)
             End Using
         End Sub
     End Module

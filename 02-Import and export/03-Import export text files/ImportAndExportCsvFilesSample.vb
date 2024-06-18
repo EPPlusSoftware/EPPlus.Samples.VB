@@ -70,7 +70,7 @@ Namespace EPPlusSamples.LoadDataFromCsvFilesIntoTables
     .SkipLinesEnd = 1
 }
 
-            Dim file1 = FileUtil.GetFileInfo("02-Import and Export\03-Import export csv files", "Sample2.3-1.txt")
+            Dim file1 = FileUtil.GetFileInfo("02-Import and Export\03-Import export text files", "Sample2.3-1.txt")
 
             'Now read the file into the sheet. Start from cell A1. Create a table with style 27. First row contains the header.
             Console.WriteLine("Load the text file...")
@@ -138,7 +138,7 @@ Namespace EPPlusSamples.LoadDataFromCsvFilesIntoTables
 
             'Now read the file into the sheet.
             Console.WriteLine("Load the text file...")
-            Dim file2 = FileUtil.GetFileInfo("02-Import and Export\03-Import export csv files", "Sample2.3-2.txt")
+            Dim file2 = FileUtil.GetFileInfo("02-Import and Export\03-Import export text files", "Sample2.3-2.txt")
 
             Dim range = Await sheet.Cells("A1").LoadFromTextAsync(file2, format)
 
