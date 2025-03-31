@@ -14,8 +14,8 @@ Namespace EPPlusSamples
             'This sample also shows how to use a secondary axis.
             Await ImportAndExportCsvFilesSample.RunAsync()
 
-            'Sample 2.3.2 Shows the 2 ways to load a fixed width text file into a sheet And also how to export to a fixed width text file
-            ImportAndExportFixedWidthFiles.RunSample()
+            'Sample 2.3.2 Shows the 2 ways to load a fixed width text file into a sheet and also how to export to a fixed width text file
+            Call RunSample()
 
             'Sample 2.4 - Import and Export DataTable
             DataTableSample.Run()
