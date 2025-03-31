@@ -47,8 +47,6 @@ Namespace EPPlusSamples._02_Import_and_export._03_Import_export_text_files
                 package.SaveAs(newWorkbook)
             End If
 
-
-
             'Import fixed width text file using column starting position.
             If True Then
                 Console.WriteLine("Importing the file using column positions...")

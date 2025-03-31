@@ -1,4 +1,5 @@
-﻿Imports EPPlusSamples.DrawingsChartsAndThemes
+﻿Imports EPPlusSamples._05_Drawings_charts_and_themes._06_OLE_Objects
+Imports EPPlusSamples.DrawingsChartsAndThemes
 Imports System
 Imports System.Threading.Tasks
 
@@ -25,8 +26,14 @@ Namespace EPPlusSamples
             'Sample 5.4 - Shows how to add sparkline charts.
             Call SparkLinesSample.Run()
 
-            'Sample 26 - Form Controls & Drawing Groups
+            'Sample 5.5 - Form Controls & Drawing Groups
             Call FormControlsSample.Run()
+
+            'Sample 5.6 - OLE objects
+            Call OLEObjectsSample.Run()
+
+            'Sample 5.7 - In-cell Pictures.
+            InCellPicturesSample.Run()
         End Function
     End Class
 End Namespace
